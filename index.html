@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes 学习路线 — 从入门到精通</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --accent2: #3fb950;
+    --warn: #d2991d;
+    --danger: #f85149;
+    --stage-1: #58a6ff;
+    --stage-2: #3fb950;
+    --stage-3: #d2991d;
+    --stage-4: #bc8cff;
+    --stage-5: #f778ba;
+    --stage-6: #f0883e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    text-align: center;
+    padding: 80px 20px 60px;
+    background: linear-gradient(180deg, #0d1117 0%, #161b22 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(88,166,255,0.08) 0%, transparent 60%);
+    animation: heroGlow 8s ease-in-out infinite alternate;
+  }
+  @keyframes heroGlow {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), #79c0ff, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto 32px;
+    position: relative;
+  }
+  .hero .meta {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero .meta span {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  /* ── Progress bar ── */
+  .progress-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 20px 0;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .progress-text {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  /* ── Page layout ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── Stage cards ── */
+  .stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .stage:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(88,166,255,0.08);
+  }
+  .stage.completed {
+    border-color: var(--accent2);
+    opacity: 0.85;
+  }
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .stage-header:hover { background: rgba(255,255,255,0.02); }
+  .stage-number {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1.2rem;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .stage:nth-child(1) .stage-number { background: var(--stage-1); }
+  .stage:nth-child(2) .stage-number { background: var(--stage-2); }
+  .stage:nth-child(3) .stage-number { background: var(--stage-3); }
+  .stage:nth-child(4) .stage-number { background: var(--stage-4); }
+  .stage:nth-child(5) .stage-number { background: var(--stage-5); }
+  .stage:nth-child(6) .stage-number { background: var(--stage-6); }
+
+  .stage-info { flex: 1; min-width: 0; }
+  .stage-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .stage-meta {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .stage-status {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .stage-status:hover { border-color: var(--accent2); }
+  .stage-status.checked {
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
+  .stage-status.checked::after {
+    content: '✓';
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .stage-arrow {
+    flex-shrink: 0;
+    color: var(--muted);
+    transition: transform 0.3s;
+    font-size: 1.2rem;
+  }
+  .stage.open .stage-arrow { transform: rotate(180deg); }
+
+  /* ── Stage content ── */
+  .stage-body {
+    display: none;
+    padding: 0 24px 24px;
+    border-top: 1px solid var(--border);
+  }
+  .stage.open .stage-body { display: block; }
+  .stage-body h3 {
+    font-size: 0.95rem;
+    color: var(--accent);
+    margin: 20px 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stage-body h3:first-child { margin-top: 20px; }
+  .stage-body ul {
+    list-style: none;
+    padding: 0;
+  }
+  .stage-body ul li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--text);
+    font-size: 0.93rem;
+  }
+  .stage-body ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+    top: 9px;
+  }
+  .stage-body p {
+    color: var(--muted);
+    font-size: 0.93rem;
+    margin: 10px 0;
+  }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin: 12px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .code-block .lang {
+    position: absolute;
+    top: 8px; right: 50px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .code-block pre {
+    padding: 16px;
+    overflow-x: auto;
+    margin: 0;
+  }
+  .code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #c9d1d9;
+  }
+  .code-block .copy-btn {
+    position: absolute;
+    top: 6px; right: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .code-block .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+  .code-block .copy-btn.copied { color: var(--accent2); border-color: var(--accent2); }
+
+  /* ── Checklist ── */
+  .checklist { margin: 10px 0; }
+  .checklist label {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0;
+    cursor: pointer;
+    font-size: 0.93rem;
+  }
+  .checklist input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent2);
+    cursor: pointer;
+  }
+  .checklist input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* ── Highlight box ── */
+  .highlight-box {
+    background: rgba(88,166,255,0.06);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-size: 0.93rem;
+  }
+  .highlight-box strong { color: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .hero { padding: 50px 16px 40px; }
+    .stage-header { padding: 16px; gap: 12px; }
+    .stage-body { padding: 0 16px 20px; }
+    .stage-number { width: 36px; height: 36px; font-size: 1rem; }
+  }
+
+  /* ── Print-friendly ── */
+  @media print {
+    body { background: #fff; color: #000; }
+    .stage { border: 1px solid #ccc; break-inside: avoid; }
+    .stage-body { display: block !important; }
+    .code-block { background: #f5f5f5; border: 1px solid #ddd; }
+    .hero { background: none; border: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <h1>Hermes 学习路线</h1>
+  <p>从安装第一行命令到能写插件、贡献代码——一份结构化的六阶段学习计划</p>
+  <div class="meta">
+    <span>📅 6 个阶段</span>
+    <span>⏱ 约 1-3 个月</span>
+    <span>🛠 面向实践</span>
+    <span>🌐 开源免费</span>
+  </div>
+</section>
+
+<!-- ─── Progress ─── -->
+<div class="progress-wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-text" id="progressText">进度 0 / 6 阶段完成</div>
+</div>
+
+<!-- ─── Stages ─── -->
+<div class="container" id="stages">
+
+  <!-- Stage 1 -->
+  <div class="stage" data-stage="1">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">1</div>
+      <div class="stage-info">
+        <div class="stage-title">安装和第一次对话</div>
+        <div class="stage-meta">约 1 小时 · 难度：入门</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(1)" data-check="1"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>装好 Hermes，完成第一次对话。</div>
+
+      <h3>安装步骤</h3>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code># 一键安装
+curl -fsSL https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.sh | bash
+
+# 启动配置向导 — 设置模型和 API key
+hermes setup
+
+# 你的第一句对话
+hermes chat -q "你好，帮我写一个 Hello World Python 脚本"
+
+# 进入交互模式（在这里持续对话）
+hermes</code></pre>
+      </div>
+
+      <h3>需要理解的概念</h3>
+      <ul>
+        <li><code>hermes chat -q "..."</code> = 一次性问答，聊完退出</li>
+        <li><code>hermes</code>（无参数）= 交互模式，持续对话</li>
+        <li><code>hermes setup</code> = 配置向导，帮你选模型、填 API key</li>
+      </ul>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="1">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>安装成功（hermes --version 有输出）</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>配好至少一个模型（推荐 OpenRouter，注册送免费额度）</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>完成一次对话</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>知道怎么退出（/quit 或 Ctrl+D）</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage" data-stage="2">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">2</div>
+      <div class="stage-info">
+        <div class="stage-title">日常工具使用</div>
+        <div class="stage-meta">约 1-2 天 · 难度：入门</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(2)" data-check="2"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>学会让 Hermes 帮你干活——不只会聊天，还能读写文件、执行命令、搜索网页。</div>
+
+      <h3>试试这些任务</h3>
+      <ul>
+        <li>📄 读写文件：<code>"帮我在 ~/notes.txt 里写一段笔记"</code></li>
+        <li>💻 执行命令：<code>"帮我查看磁盘用量"</code>（Hermes 会自动执行 df -h）</li>
+        <li>📁 文件管理：<code>"帮我看看 home 目录下有哪些大文件"</code></li>
+        <li>🌐 搜索网页：<code>"搜索今天的热门科技新闻"</code></li>
+        <li>📚 技术查询：<code>"帮我查一下 Python 3.13 的新特性"</code></li>
+        <li>🔧 Git 管理：<code>"帮我给当前项目创建一个 git commit"</code></li>
+      </ul>
+
+      <h3>关键会话命令</h3>
+      <div class="code-block">
+        <span class="lang">Hermes 交互</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>/clear    清屏 + 开始新会话
+/new      开始新会话（保留历史）
+/retry    重新执行上一个请求
+/undo     撤销最后一轮对话
+/history  查看对话历史</code></pre>
+      </div>
+
+      <div class="highlight-box"><strong>核心理解：</strong>Hermes 有「工具」——它能读文件、跑命令、搜网页，不是只会聊天。多试各种任务，感受它的能力边界。</div>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="2">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功让 Hermes 创建/修改文件</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功执行终端命令</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功搜索网页内容</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>熟练使用 /clear /new /retry</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage" data-stage="3">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">3</div>
+      <div class="stage-info">
+        <div class="stage-title">深入理解配置和模型</div>
+        <div class="stage-meta">约 1 周 · 难度：中级</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(3)" data-check="3"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>理解 Hermes 的配置体系，能自由切换模型，能根据自己的需求微调行为。</div>
+
+      <h3>常用管理命令</h3>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>hermes model          # 交互式切换模型
+hermes config         # 查看当前完整配置
+hermes config edit    # 用编辑器打开 config.yaml
+hermes doctor         # 健康检查（依赖和配置）
+hermes logs --follow  # 实时查看日志
+hermes status         # 组件状态一览</code></pre>
+      </div>
+
+      <h3>必知的配置项</h3>
+      <div class="code-block">
+        <span class="lang">yaml (~/.hermes/config.yaml)</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>model:
+  default: "deepseek/deepseek-chat"   # 默认模型
+  provider: "openrouter"              # 提供商
+
+agent:
+  max_turns: 90                       # 最大工具调用轮数
+
+terminal:
+  backend: "local"                    # 本地执行
+  timeout: 180                        # 命令超时（秒）
+
+display:
+  skin: "default"                     # 界面主题
+  show_cost: true                     # 显示 token 费用</code></pre>
+      </div>
+
+      <h3>关键概念</h3>
+      <ul>
+        <li><strong>Provider（提供商）与 Model（模型）</strong> — Provider 是 API 入口（如 OpenRouter、DeepSeek），Model 是具体的 LLM</li>
+        <li><strong>config.yaml</strong> 管行为，<strong>.env</strong> 管密钥 —— 永远不要把 API key 写进 config.yaml</li>
+        <li>每个模型有不同的价格和能力（代码、推理、速度），要根据任务选择</li>
+        <li>支持的 Provider 超过 20 个，覆盖国内外主流 LLM</li>
+      </ul>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="3">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功切换过至少 2 个不同模型</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>理解 config.yaml 的核心配置项</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>知道如何设置和切换 API key</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>使用 hermes doctor 排除了至少一个问题</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="stage" data-stage="4">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">4</div>
+      <div class="stage-info">
+        <div class="stage-title">技能和记忆系统</div>
+        <div class="stage-meta">约 1-2 周 · 难度：中级</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(4)" data-check="4"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>让 Hermes 越用越聪明——通过技能（Skills）和记忆（Memory）建立长期知识积累。</div>
+
+      <h3>技能管理</h3>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>hermes skills browse              # 浏览所有可用技能
+hermes skills search "python"     # 搜索技能
+hermes skills install &lt;ID&gt;       # 安装技能
+hermes skills list                 # 查看已安装技能
+hermes skills config               # 按平台启用/禁用技能
+
+# 在对话中加载技能
+/skill &lt;技能名&gt;</code></pre>
+      </div>
+
+      <h3>推荐安装的技能</h3>
+      <ul>
+        <li><code>test-driven-development</code> — TDD 开发方法</li>
+        <li><code>writing-plans</code> — 编写实现计划</li>
+        <li><code>systematic-debugging</code> — 系统化调试方法</li>
+        <li><code>github-pr-workflow</code> — GitHub PR 完整流程</li>
+        <li><code>requesting-code-review</code> — 代码审查最佳实践</li>
+      </ul>
+
+      <h3>记忆系统</h3>
+      <div class="highlight-box">
+        Hermes 能在你允许的情况下记住重要信息，<strong>跨会话保存</strong>。下次对话时自动加载。试试说：
+        <br><br>
+        <code>"记住我喜欢用 pytest 而不是 unittest"</code><br>
+        <code>"记住我的项目用 Python 3.12"</code><br>
+        <code>"记住我在东八区（UTC+8）"</code>
+      </div>
+
+      <ul>
+        <li>记忆分两类：<strong>用户画像</strong>（你是谁）和 <strong>环境笔记</strong>（项目约定、工具怪癖）</li>
+        <li>支持多种记忆后端：内置 SQLite、Honcho、Mem0 等</li>
+        <li>当你和 Hermes 解决了一个复杂问题后，让它<strong>把做法存成技能</strong></li>
+      </ul>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="4">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>安装了至少 3 个技能</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>在对话中成功加载并使用技能</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>保存了至少 2 条跨会话记忆</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>让 Hermes 把一次成功经验存为技能</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 5 -->
+  <div class="stage" data-stage="5">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">5</div>
+      <div class="stage-info">
+        <div class="stage-title">进阶能力</div>
+        <div class="stage-meta">约 3-4 周 · 难度：中高级</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(5)" data-check="5"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>掌握子任务委托、后台处理、定时任务、多平台接入等高级功能。</div>
+
+      <h3>子任务委托（delegate_task）</h3>
+      <p>把复杂任务拆分给「子代理」并行执行。每个子代理有独立的上下文和终端。</p>
+      <div class="code-block">
+        <span class="lang">对话示例</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>"帮我同时研究 Flask 和 FastAPI 的最新版本，比较它们的差异"
+
+"把 tests/ 目录分成 4 组，并行运行每组测试，汇总结果"</code></pre>
+      </div>
+      <ul>
+        <li>单个子代理：适合需要深度推理的子任务</li>
+        <li>批量并行：最多 3 个子代理同时运行（可配置）</li>
+        <li>子代理之间完全隔离，不影响主对话</li>
+      </ul>
+
+      <h3>后台任务</h3>
+      <div class="code-block">
+        <span class="lang">对话示例</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>/background 帮我运行完整的测试套件
+
+/background 帮我构建 Docker 镜像并推送
+
+/stop    停止所有后台进程
+/agents  查看活跃的代理和任务</code></pre>
+      </div>
+
+      <h3>定时任务（Cron）</h3>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code># 每天早上 9 点汇总科技新闻
+hermes cron create "0 9 * * *" \
+  --prompt "搜索今天科技新闻，总结 5 条最重要的"
+
+# 每 2 小时检查一次服务器状态
+hermes cron create "every 2h" \
+  --prompt "检查 myapp.com 是否正常响应"
+
+# 管理定时任务
+hermes cron list            # 列出所有
+hermes cron pause &lt;ID&gt;     # 暂停
+hermes cron run &lt;ID&gt;       # 立即触发
+hermes cron remove &lt;ID&gt;    # 删除</code></pre>
+      </div>
+
+      <h3>多平台 Gateway</h3>
+      <p>同一个 Hermes 接到 Telegram、Discord、微信等 20+ 平台：</p>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>hermes gateway setup      # 交互式配置平台
+hermes gateway install    # 安装为 systemd 服务
+hermes gateway start      # 启动
+hermes gateway status     # 查看状态
+
+# 支持的平台（部分）
+# Telegram / Discord / Slack / WhatsApp / Signal
+# 微信 / 飞书 / 钉钉 / 企业微信 / QQ
+# Email / SMS / Matrix / Mattermost / iMessage</code></pre>
+      </div>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="5">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功使用委托任务并行处理工作</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>成功运行至少一个后台任务</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>创建并运行了至少一个定时任务</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>（可选）配置了一个消息平台 Gateway</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 6 -->
+  <div class="stage" data-stage="6">
+    <div class="stage-header" onclick="toggleStage(this)">
+      <div class="stage-number">6</div>
+      <div class="stage-info">
+        <div class="stage-title">开发者级别</div>
+        <div class="stage-meta">持续学习 · 难度：高级</div>
+      </div>
+      <div class="stage-status" onclick="event.stopPropagation();toggleCheck(6)" data-check="6"></div>
+      <div class="stage-arrow">▾</div>
+    </div>
+    <div class="stage-body">
+      <div class="highlight-box"><strong>目标：</strong>能扩展 Hermes——写插件、写技能、贡献代码。</div>
+
+      <h3>写自定义工具（插件）</h3>
+      <p>在 <code>~/.hermes/plugins/</code> 下创建插件，添加你自己的工具：</p>
+      <div class="code-block">
+        <span class="lang">text</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>插件目录结构：
+~/.hermes/plugins/my-plugin/
+├── plugin.yaml        # 插件元数据
+└── __init__.py        # 工具实现</code></pre>
+      </div>
+      <div class="code-block">
+        <span class="lang">python (__init__.py 示例)</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>import json
+from tools.registry import registry
+
+def my_tool(param: str, task_id: str = None) -> str:
+    return json.dumps({"success": True, "data": param})
+
+registry.register(
+    name="my_tool",
+    toolset="my_toolset",
+    schema={
+        "name": "my_tool",
+        "description": "我的自定义工具",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "param": {"type": "string", "description": "参数"}
+            },
+            "required": ["param"]
+        }
+    },
+    handler=lambda args, **kw: my_tool(
+        param=args.get("param", ""), task_id=kw.get("task_id")),
+)</code></pre>
+      </div>
+
+      <h3>写技能（Skill）</h3>
+      <p>当你反复做某类任务时，把它写成一个 SKILL.md 文件并分享：</p>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code># 创建技能
+hermes skills install ~/my-skill/SKILL.md
+
+# 发布到 Hub
+hermes skills publish ~/.hermes/skills/my-skill/</code></pre>
+      </div>
+
+      <h3>理解核心架构</h3>
+      <table style="width:100%;border-collapse:collapse;margin:12px 0;font-size:0.93rem;">
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="text-align:left;padding:8px;color:var(--accent);">文件</th>
+          <th style="text-align:left;padding:8px;color:var(--accent);">作用</th>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>run_agent.py</code></td><td style="padding:8px;">核心对话循环</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>model_tools.py</code></td><td style="padding:8px;">工具发现和调度</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>cli.py</code></td><td style="padding:8px;">交互式 CLI</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>gateway/</code></td><td style="padding:8px;">消息平台网关</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>tools/</code></td><td style="padding:8px;">所有工具实现</td></tr>
+        <tr style="border-bottom:1px solid var(--border);"><td style="padding:8px;"><code>skills/</code></td><td style="padding:8px;">内置技能</td></tr>
+        <tr><td style="padding:8px;"><code>tests/</code></td><td style="padding:8px;">测试套件（~3000+ 测试）</td></tr>
+      </table>
+
+      <h3>跑测试和贡献</h3>
+      <div class="code-block">
+        <span class="lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+        <pre><code>cd ~/.hermes/hermes-agent
+source .venv/bin/activate
+python -m pytest tests/ -q          # 全量测试
+python -m pytest tests/tools/ -q    # 特定目录</code></pre>
+      </div>
+
+      <h3>检查清单</h3>
+      <div class="checklist" data-stage="6">
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>创建了一个自定义工具插件</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>写了一个可复用的技能文件</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>理解了核心架构的 5 个关键文件</span></label>
+        <label><input type="checkbox" onchange="updateSubProgress()"><span>（可选）向主仓库提交了 PR</span></label>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Hermes Agent by <a href="https://nousresearch.com" style="color:var(--accent);">Nous Research</a> · 开源 MIT 协议</p>
+  <p style="margin-top:4px;">Docs: <a href="https://hermes-agent.nousresearch.com/docs" style="color:var(--muted);">hermes-agent.nousresearch.com/docs</a></p>
+</footer>
+
+<script>
+// ── Stage expand/collapse ──
+function toggleStage(header) {
+  const stage = header.parentElement;
+  stage.classList.toggle('open');
+  localStorage.setItem('stage-open-' + stage.dataset.stage, stage.classList.contains('open'));
+}
+
+// ── Stage completion check ──
+function toggleCheck(stageNum) {
+  const statusEl = document.querySelector(`[data-check="${stageNum}"]`);
+  const isChecked = statusEl.classList.toggle('checked');
+  // Also toggle on the stage card
+  const stageCard = document.querySelector(`.stage[data-stage="${stageNum}"]`);
+  stageCard.classList.toggle('completed', isChecked);
+  localStorage.setItem('stage-check-' + stageNum, isChecked);
+  updateProgress();
+}
+
+// ── Sub-checklist progress ──
+function updateSubProgress() {
+  updateProgress();
+}
+
+// ── Overall progress ──
+function updateProgress() {
+  const total = 6;
+  let completed = 0;
+  for (let i = 1; i <= total; i++) {
+    if (localStorage.getItem('stage-check-' + i) === 'true') completed++;
+  }
+  const pct = Math.round((completed / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `进度 ${completed} / ${total} 阶段完成`;
+}
+
+// ── Copy code ──
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.textContent = '已复制!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '复制';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// ── Restore state from localStorage ──
+function restoreState() {
+  for (let i = 1; i <= 6; i++) {
+    // Restore open/closed
+    if (localStorage.getItem('stage-open-' + i) === 'true') {
+      document.querySelector(`.stage[data-stage="${i}"]`)?.classList.add('open');
+    }
+    // Restore checked
+    if (localStorage.getItem('stage-check-' + i) === 'true') {
+      const checkEl = document.querySelector(`[data-check="${i}"]`);
+      const stageCard = document.querySelector(`.stage[data-stage="${i}"]`);
+      if (checkEl) checkEl.classList.add('checked');
+      if (stageCard) stageCard.classList.add('completed');
+    }
+  }
+  updateProgress();
+}
+
+restoreState();
+</script>
+
+</body>
+</html>
