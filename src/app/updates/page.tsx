@@ -35,7 +35,7 @@ export default function UpdatesPage() {
         { icon: "🖥️", title: "原生桌面应用", desc: "全新 Electron 桌面 App，一键安装、应用内自更新、拖拽文件到聊天" },
         { icon: "🔗", title: "远程 Gateway", desc: "桌面端可连接远程服务器上的 Hermes Gateway，通过 OAuth 或用户名密码" },
         { icon: "🌐", title: "Web 管理面板", desc: "完整后台：频道管理、MCP 目录、凭据管理、Webhook、记忆浏览、OIDC 登录" },
-        { icon: "🇨🇳", title: "简体中文 UI", desc: "完整的中文界面，从 TUI 到 Web 面板全量汉化" },
+        { icon: "🇨🇳", title: "简体中文 UI", desc: "Desktop App 和 Web 管理面板全面汉化，聊天界面完整适配简体中文" },
         { icon: "🚀", title: "Nous Portal 快速设置", desc: "一条命令完成全部配置（模型、搜索、生图、语音等）" },
         { icon: "↩️", title: "/undo [N] 命令", desc: "支持回退 N 步，不再只能撤销一次" },
         { icon: "🔍", title: "模糊模型选择器", desc: "所有模型选择器支持模糊搜索，输入部分名称即可匹配" },
