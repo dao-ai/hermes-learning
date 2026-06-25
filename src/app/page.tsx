@@ -7,8 +7,9 @@ const cards = [
   { href: "/models", icon: "🤖", title: "模型对比表", desc: "10 个模型对比，按任务选模型" },
   { href: "/providers", icon: "🔌", title: "Provider 配置", desc: "12 个提供商接入步骤" },
   { href: "/tui", icon: "🖥️", title: "TUI 终端 UI", desc: "Ink (React) 全功能终端界面" },
-  { href: "/faq", icon: "❓", title: "常见问题", desc: "7 个高频问题及解决方案" },
+  { href: "/updates", icon: "🚀", title: "更新日志", desc: "v0.14.0 → v0.17.0 新功能汇总" },
   { href: "/trending", icon: "🔥", title: "GitHub 趋势", desc: "每周开源项目排行榜" },
+  { href: "/faq", icon: "❓", title: "常见问题", desc: "7 个高频问题及解决方案" },
   { href: "/projects", icon: "🏗️", title: "实操项目", desc: "每阶段一个实战练习" },
   { href: "/security", icon: "🔒", title: "安全与隐私", desc: "审批模式、密钥管理、PII" },
 ];
