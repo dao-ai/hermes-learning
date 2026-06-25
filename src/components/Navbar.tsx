@@ -6,6 +6,7 @@ const links = [
   { href: "/models", label: "🤖 模型" },
   { href: "/providers", label: "🔌 接入" },
   { href: "/tui", label: "🖥️ TUI" },
+  { href: "/trending", label: "🔥 趋势" },
   { href: "/faq", label: "❓ FAQ" },
   { href: "/projects", label: "🏗️ 项目" },
   { href: "/security", label: "🔒 安全" },
